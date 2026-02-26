@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editora Tomie — Literatura, Filosofia, Ensaios</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --paper: #f0ead6;
+    --accent: #2b3d2f;
+    --text: #1c1c1c;
+    --text-muted: #4a4a3a;
+  }
+  
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--paper);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  /* Mobile blocker */
+  .mobile-block {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--paper);
+    z-index: 10000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .mobile-block h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-block p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 280px;
+    line-height: 1.6;
+  }
+  
+  @media (max-width: 768px) {
+    .mobile-block { display: flex; }
+    .site-content { display: none; }
+  }
+  
+  /* Header */
+  header {
+    background: var(--accent);
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--paper);
+    text-decoration: none;
+  }
+  
+  .logo-spiral {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .logo-spiral svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .logo-text {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  
+  nav {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  nav a {
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 1rem;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+    cursor: pointer;
+  }
+  
+  nav a:hover { opacity: 1; }
+  
+  /* Main content */
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  
+  /* Page sections */
+  .page {
+    display: none;
+  }
+  
+  .page.active {
+    display: block;
+  }
+  
+  /* Home page */
+  .hero {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  
+  .hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.8rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  
+  .hero p {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .featured {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  
+  .book-card {
+    background: white;
+    padding: 1.5rem;
+    border: 1px solid rgba(43,61,47,0.2);
+    text-align: center;
+  }
+  
+  .book-card h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  
+  .book-card .author {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  
+  .book-card .year {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+  }
+  
+  /* About page */
+  .about-content {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .about-content h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.2rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .about-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+  }
+  
+  /* Catalog page */
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .catalog-grid h1 {
+    grid-column: 1 / -1;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.2rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* Contact page */
+  .contact-content {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .contact-content h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.2rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+  }
+  
+  .contact-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  
+  /* Footer */
+  footer {
+    background: var(--accent);
+    color: var(--paper);
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+  }
+  
+  footer p {
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  /* ═══════════════════════════════════════
+     AMIGARA FAULT EFFECT
+  ═══════════════════════════════════════ */
+  
+  /* Creeping figures in corner */
+  #creeping-figures {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 120px;
+    pointer-events: none;
+    z-index: 9990;
+    opacity: 0;
+    color: var(--accent);
+    transition: opacity 0.5s;
+  }
+  
+  #creeping-figures svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Hide real cursor when effect starts */
+  body.amigara-active {
+    cursor: none;
+  }
+  
+  body.amigara-active * {
+    cursor: none !important;
+  }
+  
+  /* Fake cursor */
+  #fake-cursor {
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+  }
+  
+  #fake-cursor svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+  }
+  
+  body.amigara-active #fake-cursor {
+    display: block;
+  }
+  
+  /* The hole/silhouette */
+  #amigara-hole {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    display: none;
+    transform: translate(-50%, -50%);
+    color: var(--accent);
+  }
+  
+  body.amigara-active #amigara-hole {
+    display: block;
+    opacity: 0;
+  }
+  
+  #amigara-hole svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Final message */
+  #final-message {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    opacity: 0;
+    transition: opacity 2s;
+  }
+  
+  #final-message.visible {
+    display: flex;
+    opacity: 1;
+  }
+  
+  #final-message p {
+    color: var(--paper);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    text-align: center;
+    max-width: 400px;
+    line-height: 1.6;
+  }
+  
+  #final-message .credit {
+    margin-top: 3rem;
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<!-- Mobile blocker -->
+<div class="mobile-block">
+  <h1>Editora Tomie</h1>
+  <p>Esta página foi moldada para outro formato. Por favor, acesse de um computador.</p>
+</div>
+
+<!-- Amigara effect elements -->
+<div id="creeping-figures">
+  <svg viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Three figures like on the dust jacket -->
+    <g transform="translate(10, 20)">
+      <ellipse cx="12" cy="10" rx="10" ry="12" fill="currentColor"/>
+      <path d="M4,24 L20,24 L23,45 L25,90 L20,90 L17,115 L21,170 L16,178 L13,150 L12,125 L11,150 L8,178 L3,170 L7,115 L4,90 L-1,90 L1,45 Z" fill="currentColor"/>
+    </g>
+    <g transform="translate(40, 35) scale(0.85)">
+      <ellipse cx="12" cy="10" rx="10" ry="12" fill="currentColor"/>
+      <path d="M4,24 L20,24 L23,45 L25,90 L20,90 L17,115 L21,170 L16,178 L13,150 L12,125 L11,150 L8,178 L3,170 L7,115 L4,90 L-1,90 L1,45 Z" fill="currentColor"/>
+    </g>
+    <g transform="translate(65, 55) scale(0.7)">
+      <ellipse cx="12" cy="10" rx="10" ry="12" fill="currentColor"/>
+      <path d="M4,24 L20,24 L23,45 L25,90 L20,90 L17,115 L21,170 L16,178 L13,150 L12,125 L11,150 L8,178 L3,170 L7,115 L4,90 L-1,90 L1,45 Z" fill="currentColor"/>
+    </g>
+  </svg>
+</div>
+<div id="fake-cursor">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 1L4 18L8.5 13.5L12.5 22L15 21L11 12L18 12L4 1Z" fill="white" stroke="black" stroke-width="1.5"/>
+  </svg>
+</div>
+<div id="amigara-hole">
+  <svg viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Human silhouette - filled like the corner figures -->
+    <g transform="translate(26, 5)">
+      <ellipse cx="24" cy="20" rx="20" ry="24" fill="currentColor"/>
+      <path d="M8,48 L40,48 L46,90 L50,180 L40,180 L34,230 L42,340 L32,356 L26,300 L24,250 L22,300 L16,356 L6,340 L14,230 L8,180 L-2,180 L2,90 Z" fill="currentColor"/>
+    </g>
+  </svg>
+</div>
+<div id="final-message">
+  <p>"Este buraco foi feito para mim."</p>
+  <p class="credit">— Editora Tomie, desde 1987</p>
+</div>
+
+<!-- Site content -->
+<div class="site-content">
+  <header>
+    <a class="logo" href="#" onclick="showPage('home'); return false;">
+      <div class="logo-spiral">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20,20 C21,20 22,21 22,22 C22,24 20,26 17,26 C13,26 10,23 10,19 C10,14 14,10 20,10 C27,10 32,15 32,22 C32,30 26,36 18,36 C9,36 2,28 2,19 C2,8 11,0 22,0" 
+                stroke="#f0ead6" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+      <span class="logo-text">EDITORA TOMIE</span>
+    </a>
+    <nav>
+      <a onclick="showPage('home')">Início</a>
+      <a onclick="showPage('catalog')">Catálogo</a>
+      <a onclick="showPage('about')">Sobre</a>
+      <a onclick="showPage('contact')">Contato</a>
+    </nav>
+  </header>
+  
+  <main>
+    <!-- Home Page -->
+    <div id="page-home" class="page active">
+      <div class="hero">
+        <h1>Literatura que transforma</h1>
+        <p>Desde 1987, publicando obras que exploram as profundezas da alma humana e as formas que habitam os espaços entre o visível e o incompreensível.</p>
+      </div>
+      
+      <h2 style="text-align: center; font-family: 'Playfair Display', serif; color: var(--accent); margin-bottom: 2rem;">Lançamentos</h2>
+      
+      <div class="featured">
+        <div class="book-card">
+          <h3>Da Natureza dos Espíritos</h3>
+          <p class="author">Côn. Justino de Itó</p>
+          <p class="year">2024 · Filosofia</p>
+        </div>
+        <div class="book-card">
+          <h3>Espirais do Pensamento</h3>
+          <p class="author">Maria Helena Uzumaki</p>
+          <p class="year">2023 · Ensaios</p>
+        </div>
+        <div class="book-card">
+          <h3>Tectônica do Pacífico Oeste</h3>
+          <p class="author">Dr. Owaki Nakagaki</p>
+          <p class="year">2022 · Geologia</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Catalog Page -->
+    <div id="page-catalog" class="page">
+      <div class="catalog-grid">
+        <h1>Catálogo</h1>
+        <div class="book-card">
+          <h3>Da Natureza dos Espíritos</h3>
+          <p class="author">Côn. Justino de Itó</p>
+          <p class="year">2024 · Filosofia</p>
+        </div>
+        <div class="book-card">
+          <h3>Espirais do Pensamento</h3>
+          <p class="author">Maria Helena Uzumaki</p>
+          <p class="year">2023 · Ensaios</p>
+        </div>
+        <div class="book-card">
+          <h3>Tectônica do Pacífico Oeste</h3>
+          <p class="author">Dr. Owaki Nakagaki</p>
+          <p class="year">2022 · Geologia</p>
+        </div>
+        <div class="book-card">
+          <h3>Balões e Sonhos</h3>
+          <p class="author">Diversos autores</p>
+          <p class="year">2021 · Antologia</p>
+        </div>
+        <div class="book-card">
+          <h3>Camadas da Terra</h3>
+          <p class="author">Prof. Souichi Tsujii</p>
+          <p class="year">2020 · Geologia</p>
+        </div>
+        <div class="book-card">
+          <h3>Beleza Imortal</h3>
+          <p class="author">Tomie Kawakami</p>
+          <p class="year">2019 · Romance</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- About Page -->
+    <div id="page-about" class="page">
+      <div class="about-content">
+        <h1>Sobre a Editora</h1>
+        <p>A Editora Tomie foi fundada em 1987 com a missão de trazer ao público brasileiro obras que exploram os limites da experiência humana — textos que transformam irreversivelmente o leitor.</p>
+        <p>Nossa sede em São Paulo e filial em Belo Horizonte abrigam uma equipe dedicada a encontrar vozes únicas na literatura, filosofia e ensaios. Cada livro que publicamos é <em>moldado especificamente</em> para encontrar seu leitor ideal.</p>
+        <p>Acreditamos que certas obras exercem um chamado irresistível — uma vez que você as encontra, é impossível resistir. Como dizemos aqui: o livro certo sempre encontra seu caminho até você.</p>
+        <p style="text-align: center; margin-top: 3rem; font-style: italic; color: var(--text-muted);">"Uma vez que você entra, não há como voltar."</p>
+      </div>
+    </div>
+    
+    <!-- Contact Page -->
+    <div id="page-contact" class="page">
+      <div class="contact-content">
+        <h1>Contato</h1>
+        <p><strong>São Paulo</strong><br>Rua das Espirais, 666<br>Liberdade — SP</p>
+        <p><strong>Belo Horizonte</strong><br>Av. dos Ensaios, 130<br>Savassi — MG</p>
+        <p style="margin-top: 2rem;"><strong>Email</strong><br>contato@editoratomie.com.br</p>
+        <p style="margin-top: 2rem; font-style: italic; color: var(--text-muted);">Estamos sempre à sua espera.</p>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <p>© 2024 Editora Tomie · São Paulo · Belo Horizonte</p>
+    <p style="margin-top: 0.5rem;">Literatura · Filosofia · Ensaios</p>
+  </footer>
+</div>
+
+<script>
+  // Page navigation
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  
+  // ═══════════════════════════════════════
+  // AMIGARA FAULT EFFECT
+  // ═══════════════════════════════════════
+  
+  // Only run on desktop
+  if (window.innerWidth > 768) {
+    
+    const fakeCursor = document.getElementById('fake-cursor');
+    const amigараHole = document.getElementById('amigara-hole');
+    const finalMessage = document.getElementById('final-message');
+    const creepingFigures = document.getElementById('creeping-figures');
+    
+    let realX = 0, realY = 0;
+    let fakeX = 0, fakeY = 0;
+    let holeX = 0, holeY = 0;
+    
+    let startTime = null;
+    let effectStarted = false;
+    let trapped = false;
+    
+    // Timing (in seconds)
+    const CREEP_START = 5;          // When figures start appearing
+    const EFFECT_DELAY = 45;        // Normal browsing time before cursor effect starts
+    const EFFECT_DURATION = 60;     // How long until fully trapped
+    const HOLE_APPEAR_AT = 0.2;     // When hole appears (fraction of duration)
+    
+    // Track real mouse
+    document.addEventListener('mousemove', (e) => {
+      realX = e.clientX;
+      realY = e.clientY;
+      
+      if (!startTime) startTime = Date.now();
+    });
+    
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+    
+    function update() {
+      if (!startTime) {
+        requestAnimationFrame(update);
+        return;
+      }
+      
+      const elapsed = (Date.now() - startTime) / 1000;
+      
+      // Phase 0: Creeping figures appear and grow
+      if (elapsed >= CREEP_START && elapsed < EFFECT_DELAY) {
+        const creepProgress = (elapsed - CREEP_START) / (EFFECT_DELAY - CREEP_START);
+        
+        // Opacity: 0.02 -> 0.15
+        const figureOpacity = lerp(0.02, 0.15, creepProgress);
+        creepingFigures.style.opacity = figureOpacity;
+        
+        // Size: starts at 60px wide, grows to 150px
+        const figureSize = lerp(60, 150, Math.pow(creepProgress, 2));
+        creepingFigures.style.width = figureSize + 'px';
+        creepingFigures.style.height = (figureSize * 2) + 'px';
+      }
+      
+      // Phase 1: Normal browsing (figures visible but cursor normal)
+      if (elapsed < EFFECT_DELAY) {
+        requestAnimationFrame(update);
+        return;
+      }
+      
+      // Start the effect
+      if (!effectStarted) {
+        effectStarted = true;
+        document.body.classList.add('amigara-active');
+        fakeX = realX;
+        fakeY = realY;
+        holeX = realX;
+        holeY = realY;
+        // Hide hole initially until it's time to appear
+        amigараHole.style.opacity = '0';
+      }
+      
+      const effectElapsed = elapsed - EFFECT_DELAY;
+      const progress = Math.min(effectElapsed / EFFECT_DURATION, 1);
+      
+      // Fade out the corner figures as the hole takes over
+      const figureFade = Math.max(0, 0.15 - (progress * 0.3));
+      creepingFigures.style.opacity = figureFade;
+      
+      // Mouse lag increases over time (starts responsive, becomes sluggish)
+      const lagFactor = lerp(0.3, 0.01, progress);
+      fakeX = lerp(fakeX, realX, lagFactor);
+      fakeY = lerp(fakeY, realY, lagFactor);
+      
+      // Position fake cursor
+      fakeCursor.style.left = fakeX + 'px';
+      fakeCursor.style.top = fakeY + 'px';
+      
+      // Hole follows even slower and appears after a delay
+      if (progress > HOLE_APPEAR_AT) {
+        const holeProgress = (progress - HOLE_APPEAR_AT) / (1 - HOLE_APPEAR_AT);
+        
+        // First frame of hole appearing - snap to cursor
+        if (holeProgress < 0.01) {
+          holeX = fakeX;
+          holeY = fakeY;
+        }
+        
+        // Hole follows cursor very slowly
+        const holeLag = lerp(0.05, 0.002, holeProgress);
+        holeX = lerp(holeX, fakeX, holeLag);
+        holeY = lerp(holeY, fakeY, holeLag);
+        
+        // Hole shrinks over time
+        const holeSize = lerp(400, 60, holeProgress);
+        
+        // Hole gets more opaque over time
+        const holeOpacity = lerp(0.3, 1, holeProgress);
+        
+        amigараHole.style.left = holeX + 'px';
+        amigараHole.style.top = holeY + 'px';
+        amigараHole.style.width = holeSize + 'px';
+        amigараHole.style.height = holeSize * 2 + 'px';
+        amigараHole.style.opacity = holeOpacity;
+        
+        // Hole starts to "stretch" near the end
+        if (holeProgress > 0.7) {
+          const stretchProgress = (holeProgress - 0.7) / 0.3;
+          const stretch = lerp(1, 2.5, stretchProgress);
+          amigараHole.style.transform = `translate(-50%, -50%) scaleY(${stretch})`;
+        }
+      }
+      
+      // Final trap
+      if (progress >= 1 && !trapped) {
+        trapped = true;
+        setTimeout(() => {
+          finalMessage.classList.add('visible');
+        }, 1000);
+      }
+      
+      requestAnimationFrame(update);
+    }
+    
+    update();
+  }
+</script>
+
+</body>
+</html>
